@@ -1,7 +1,6 @@
 
 from flask import Flask, render_template, request
 from pypdf import PdfReader
-from collections import Counter
 import re
 import io
 
@@ -17,10 +16,32 @@ SKILLS = [
     "power bi", "tensorflow", "pytorch", "aws"
 ]
 
+# Equivalent names for the same skill
+SKILL_ALIASES = {
+    "html": ["html5"],
+    "css": ["css3"],
+    "javascript": ["js"],
+    "scikit-learn": ["sklearn", "scikit learn"],
+    "rest api": ["rest apis", "restful api", "restful apis"],
+    "problem solving": ["problem-solving"]
+}
+
 
 def extract_pdf_text(file):
     reader = PdfReader(io.BytesIO(file.read()))
     return " ".join(page.extract_text() or "" for page in reader.pages)
+
+
+def contains_skill(text, skill):
+    """Check whether a skill or one of its accepted aliases occurs."""
+    names = [skill] + SKILL_ALIASES.get(skill, [])
+
+    for name in names:
+        pattern = r"(?<!\w)" + re.escape(name) + r"(?!\w)"
+        if re.search(pattern, text):
+            return True
+
+    return False
 
 
 def extract_skills(text):
@@ -28,8 +49,7 @@ def extract_skills(text):
     found = []
 
     for skill in SKILLS:
-        pattern = r"(?<!\w)" + re.escape(skill) + r"(?!\w)"
-        if re.search(pattern, text):
+        if contains_skill(text, skill):
             found.append(skill)
 
     return found
@@ -42,40 +62,47 @@ def index():
 
     if request.method == "POST":
         resume = request.files.get("resume")
-        job_description = request.form.get("job_description", "").strip()
+        job_description = request.form.get(
+            "job_description", ""
+        ).strip()
 
         if not resume or not resume.filename:
             error = "Please upload your resume PDF."
+
         elif not resume.filename.lower().endswith(".pdf"):
             error = "Please upload a PDF file."
+
         elif not job_description:
             error = "Please enter the job description."
+
         else:
             try:
                 resume_text = extract_pdf_text(resume)
 
                 if not resume_text.strip():
-                    error = "No readable text found. Please try a text-based PDF."
+                    error = (
+                        "No readable text found. "
+                        "Please try a text-based PDF."
+                    )
+
                 else:
                     resume_skills = extract_skills(resume_text)
                     required_skills = extract_skills(job_description)
 
-                    if required_skills:
-                        matched = [
-                            skill for skill in required_skills
-                            if skill in resume_skills
-                        ]
-                        missing = [
-                            skill for skill in required_skills
-                            if skill not in resume_skills
-                        ]
-                        score = round(
-                            len(matched) / len(required_skills) * 100
-                        )
-                    else:
-                        matched = []
-                        missing = []
-                        score = 0
+                    matched = [
+                        skill for skill in required_skills
+                        if contains_skill(resume_text.lower(), skill)
+                    ]
+
+                    missing = [
+                        skill for skill in required_skills
+                        if skill not in matched
+                    ]
+
+                    score = (
+                        round(len(matched) / len(required_skills) * 100)
+                        if required_skills else 0
+                    )
 
                     result = {
                         "score": score,
@@ -86,9 +113,16 @@ def index():
                     }
 
             except Exception:
-                error = "Unable to read this PDF. Please try another file."
+                error = (
+                    "Unable to read this PDF. "
+                    "Please try another file."
+                )
 
-    return render_template("index.html", result=result, error=error)
+    return render_template(
+        "index.html",
+        result=result,
+        error=error
+    )
 
 
 if __name__ == "__main__":
