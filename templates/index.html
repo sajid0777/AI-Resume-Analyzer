@@ -1,0 +1,82 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume Analyzer</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="container">
+        <header>
+            <h1>Resume Analyzer</h1>
+            <p>Discover how your resume matches a job description.</p>
+        </header>
+
+        <section class="card">
+            <form method="POST" enctype="multipart/form-data">
+                <label for="resume">Upload your resume (PDF)</label>
+                <input type="file" id="resume" name="resume"
+                       accept=".pdf,application/pdf" required>
+
+                <label for="job_description">Job description</label>
+                <textarea id="job_description" name="job_description"
+                          rows="7"
+                          placeholder="Paste the job requirements here..."
+                          required></textarea>
+
+                <button type="submit">Analyze Resume</button>
+            </form>
+        </section>
+
+        {% if error %}
+        <section class="card error">
+            {{ error }}
+        </section>
+        {% endif %}
+
+        {% if result %}
+        <section class="card results">
+            <h2>Analysis Results</h2>
+            <div class="score">{{ result.score }}%</div>
+            <p>Job description skill match</p>
+
+            <h3>Matched Skills ({{ result.matched|length }})</h3>
+            <div class="skills">
+                {% for skill in result.matched %}
+                <span class="matched">{{ skill }}</span>
+                {% else %}
+                <p>No matching skills found.</p>
+                {% endfor %}
+            </div>
+
+            <h3>Missing Skills ({{ result.missing|length }})</h3>
+            <div class="skills">
+                {% for skill in result.missing %}
+                <span class="missing">{{ skill }}</span>
+                {% else %}
+                <p>No missing skills detected from our skill list.</p>
+                {% endfor %}
+            </div>
+
+            <h3>Skills Detected in Resume</h3>
+            <div class="skills">
+                {% for skill in result.resume_skills %}
+                <span>{{ skill }}</span>
+                {% else %}
+                <p>No recognized skills detected.</p>
+                {% endfor %}
+            </div>
+
+            <p class="note">
+                This score measures matches against a predefined skill list.
+                It is not an overall assessment of your qualifications.
+            </p>
+        </section>
+        {% endif %}
+    </main>
+</body>
+</html>
+```
