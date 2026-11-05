@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}VioletCV — A clearer path to your next role{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <div class="eyebrow"><span class="pulse"></span> RESUME INTELLIGENCE, MADE CLEAR</div>
+    <h1>Make your resume<br>work <span class="gradient-text">smarter.</span></h1>
+    <p class="hero-lede">Compare your resume with a job description, discover relevant skill gaps, and leave with practical next steps — not just a number.</p>
+    <div class="hero-actions"><a class="button primary" href="{{ url_for('analyze') }}">Analyze my resume <span>↗</span></a><a class="button secondary" href="{{ url_for('register') }}">Create free account</a></div>
+    <div class="hero-trust"><span class="trust-icon">✦</span> Transparent analysis. No paid AI API required.</div>
+  </div>
+  <div class="hero-art">
+    <div class="orbit orbit-a"></div><div class="orbit orbit-b"></div>
+    <div class="preview-card">
+      <div class="preview-top"><div><span class="tiny-label">YOUR ANALYSIS</span><h3>Resume overview</h3></div><span class="live-pill">● PREVIEW</span></div>
+      <div class="preview-score"><div class="ring"><span>78<small>%</small></span></div><div><strong>Resume–job match</strong><p>Based on detected skills</p></div></div>
+      <div class="mini-label-row"><span>Skills detected</span><span>8 of 11</span></div><div class="progress"><span style="width:72%"></span></div>
+      <div class="preview-skills"><span class="chip good">Python</span><span class="chip good">SQL</span><span class="chip good">REST API</span><span class="chip missing">Docker</span><span class="chip missing">AWS</span></div>
+      <div class="preview-note"><span>✦</span><div><b>Next step</b><p>Make your project evidence easier to find.</p></div></div>
+    </div>
+    <div class="float-card float-left"><span class="float-icon">✧</span><div><b>Skill insights</b><small>Clear, actionable feedback</small></div></div>
+    <div class="float-card float-right"><span class="float-icon">↗</span><div><b>Your next move</b><small>Personalized improvement prompt</small></div></div>
+  </div>
+</section>
+<section class="section-block">
+  <div class="section-heading"><div class="eyebrow">BUILT FOR YOUR NEXT STEP</div><h2>More clarity. <span class="gradient-text">Less guesswork.</span></h2><p>Useful feedback to help you tailor your resume honestly for the role you want.</p></div>
+  <div class="feature-grid">
+    <article class="feature-card"><div class="feature-icon">⌕</div><h3>Skill comparison</h3><p>See detected matches and requirements that weren't found in the resume text.</p><span class="feature-number">01 / ANALYZE</span></article>
+    <article class="feature-card"><div class="feature-icon">✧</div><h3>Practical suggestions</h3><p>Get a checklist for making your existing experience clearer and more relevant.</p><span class="feature-number">02 / IMPROVE</span></article>
+    <article class="feature-card"><div class="feature-icon">▤</div><h3>Copy-ready AI prompt</h3><p>Take personalized guidance to any AI assistant — and keep your claims truthful.</p><span class="feature-number">03 / TAKE ACTION</span></article>
+  </div>
+</section>
+<section class="bottom-cta"><div><div class="eyebrow">YOUR NEXT OPPORTUNITY STARTS HERE</div><h2>Know what to improve.</h2><p>Start with a PDF and the job description you care about.</p></div><a class="button primary" href="{{ url_for('analyze') }}">Try the analyzer <span>↗</span></a></section>
+{% endblock %}

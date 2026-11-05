@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}My Profile — VioletCV{% endblock %}
+{% block content %}
+<section class="page-title compact"><div><div class="eyebrow">YOUR ACCOUNT</div><h1>Personal <span class="gradient-text">profile.</span></h1><p>These details are editable and private to your account.</p></div></section>
+<section class="content-panel form-panel"><form method="post" class="form-grid">
+<label>Full name<input name="full_name" value="{{ user.full_name }}" required maxlength="100"></label><label>Email address<input type="email" name="email" value="{{ user.email }}" required></label>
+<label>Phone <span class="optional">Optional</span><input name="phone" value="{{ user.phone }}" maxlength="40" placeholder="Phone number"></label><label>Location <span class="optional">Optional</span><input name="location" value="{{ user.location }}" maxlength="100" placeholder="City, country"></label>
+<label class="span-two">Education <span class="optional">Optional</span><input name="education" value="{{ user.education }}" maxlength="200" placeholder="Degree, institution, or qualification"></label>
+<label class="span-two">Preferred job role <span class="optional">Optional</span><input name="preferred_role" value="{{ user.preferred_role }}" maxlength="100" placeholder="e.g. Python Developer"></label>
+<div class="span-two"><button class="button primary" type="submit">Save changes <span>↗</span></button></div>
+</form></section>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Saved Analysis — VioletCV{% endblock %}
+{% block content %}
+<section class="page-title compact"><div><div class="eyebrow">SAVED ANALYSIS · {{ analysis.created_at }}</div><h1>{{ result.title }}</h1><p>Saved result. Uploaded resume files are not stored.</p></div><a class="button secondary" href="{{ url_for('history') }}">← Back to history</a></section>
+<div class="saved-score"><div class="score-number">{{ result.score }}<small>%</small></div><div><b>Resume–job match estimate</b><p>Not an ATS score. Based on detected skills from our predefined list.</p></div></div>
+<div class="disclaimer-banner"><span>ⓘ</span><p><strong>This is NOT an ATS score.</strong> It doesn't reproduce a specific applicant tracking system or predict hiring outcomes.</p></div>
+<div class="two-column result-columns"><section class="content-panel"><h3>Matched skills</h3><div class="skill-list">{% for skill in result.matched %}<span class="skill-pill good">{{ skill }}</span>{% else %}<span class="muted">None</span>{% endfor %}</div></section><section class="content-panel"><h3>Skills not detected</h3><div class="skill-list">{% for skill in result.missing %}<span class="skill-pill missing">{{ skill }}</span>{% else %}<span class="muted">None</span>{% endfor %}</div></section></div>
+<section class="content-panel"><h3>Detected in resume</h3><div class="skill-list">{% for skill in result.resume_skills %}<span class="skill-pill neutral">{{ skill }}</span>{% else %}<span class="muted">None</span>{% endfor %}</div><h3 class="subsection-title">Suggestions</h3><ol class="suggestion-list">{% for item in result.suggestions %}<li>{{ item }}</li>{% endfor %}</ol></section>
+<section class="prompt-panel"><div class="prompt-header"><div><div class="eyebrow">COPY-READY PROMPT</div><h2>Improve your resume with an AI assistant.</h2></div><button class="button primary" type="button" data-copy-target="saved-prompt">Copy prompt ⧉</button></div><textarea id="saved-prompt" class="prompt-text" readonly>{{ result.prompt }}</textarea></section>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Settings — VioletCV{% endblock %}
+
+{% block content %}
+
+<section class="page-title compact">
+    <div>
+        <div class="eyebrow">ACCOUNT SECURITY</div>
+        <h1>Account <span class="gradient-text">settings.</span></h1>
+        <p>Manage your password and account security.</p>
+    </div>
+</section>
+
+<section class="content-panel form-panel narrow">
+    <div class="panel-heading">
+        <div>
+            <h2>Change password</h2>
+            <p class="muted">Use at least 8 characters.</p>
+        </div>
+    </div>
+
+    <form method="post" class="form-stack">
+        <label>
+            Current password
+            <input type="password" name="current_password"
+                   autocomplete="current-password" required>
+        </label>
+
+        <label>
+            New password
+            <input type="password" name="new_password"
+                   minlength="8" autocomplete="new-password" required>
+        </label>
+
+        <label>
+            Confirm new password
+            <input type="password" name="confirm_password"
+                   minlength="8" autocomplete="new-password" required>
+        </label>
+
+        <button class="button primary" type="submit">
+            Update password <span>↗</span>
+        </button>
+    </form>
+</section>
+
+<section class="content-panel form-panel narrow" style="margin-top: 28px;">
+    <div class="panel-heading">
+        <div>
+            <div class="eyebrow">DANGER ZONE</div>
+            <h2>Delete account</h2>
+            <p class="muted">
+                Permanently delete your account and all associated resume analysis history.
+            </p>
+        </div>
+    </div>
+
+    <form method="post"
+          action="{{ url_for('delete_account') }}"
+          class="form-stack"
+          onsubmit="return confirm('Are you sure you want to permanently delete your account and all analysis history?');">
+
+        <label>
+            Confirm your current password
+            <input type="password"
+                   name="password"
+                   autocomplete="current-password"
+                   required>
+        </label>
+
+        <button class="button"
+                type="submit"
+                style="background:#7f1d1d;color:white;">
+            Delete Account
+        </button>
+    </form>
+</section>
+
+{% endblock %}

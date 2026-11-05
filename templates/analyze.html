@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Resume Analyzer — VioletCV{% endblock %}
+{% block content %}
+<section class="page-title compact"><div><div class="eyebrow">RESUME INTELLIGENCE</div><h1>Find your <span class="gradient-text">strongest match.</span></h1><p>Compare a text-based PDF with a job description to get skill-level insights.</p></div></section>
+<div class="analyzer-layout">
+  <section class="content-panel analyzer-form-panel"><div class="panel-heading"><div><div class="eyebrow">STEP 01</div><h2>Upload & compare</h2></div><span class="step-badge">~ 1 minute</span></div>
+    <form method="post" enctype="multipart/form-data" class="form-stack">
+      <label>Analysis name <span class="optional">Optional</span><input name="title" maxlength="100" placeholder="e.g. Python Developer — Company"></label>
+      <label>Resume PDF<div class="upload-box"><input type="file" name="resume" accept=".pdf,application/pdf" required><span class="upload-icon">↑</span><span><b>Choose a PDF resume</b><small>Text-based PDF · 5 MB maximum</small></span></div></label>
+      <label>Job description<textarea name="job_description" rows="11" required placeholder="Paste the full job description here, including responsibilities and requirements..."></textarea></label>
+      <button class="button primary full" type="submit">Analyze resume <span>↗</span></button>
+      <p class="form-hint">Your file is processed for this request and is not stored as an uploaded file. Logged-in users can save the analysis results.</p>
+    </form>
+  </section>
+  <aside class="side-note"><div class="note-symbol">✦</div><h3>What you'll get</h3><ul><li>Detected and missing skills</li><li>Required vs. preferred skill signals</li><li>Practical resume improvement checklist</li><li>A personalized prompt you can copy to an AI assistant</li></ul><div class="notice-box"><b>About the score</b><p>This is a rule-based resume–job description match estimate. It is <strong>not an ATS score</strong>, doesn't reproduce a specific ATS, and doesn't predict hiring outcomes.</p></div></aside>
+</div>
+{% if error %}<div class="flash error result-error">{{ error }}</div>{% endif %}
+{% if result %}
+<section class="results-section" id="results">
+  <div class="results-heading"><div><div class="eyebrow">ANALYSIS COMPLETE</div><h2>{{ result.title }}</h2><p>Use these findings as a starting point, not a verdict.</p></div><div class="score-panel"><div class="score-number">{{ result.score }}<small>%</small></div><span>Resume–job match estimate</span></div></div>
+  <div class="disclaimer-banner"><span>ⓘ</span><p><strong>This is NOT an ATS score.</strong> It measures overlap with skills from our predefined list and may miss context, synonyms, or skills outside that list. A detected skill is not proof of proficiency; an undetected skill is not proof you lack it.</p></div>
+  <div class="stats-grid result-stats"><div class="stat-card"><span class="stat-label">SKILLS DETECTED IN JOB</span><strong>{{ result.required|length + result.preferred|length }}</strong><small>From the supported skill list</small></div><div class="stat-card"><span class="stat-label">MATCHED</span><strong class="green-text">{{ result.matched|length }}</strong><small>Found in resume text</small></div><div class="stat-card"><span class="stat-label">NOT DETECTED</span><strong class="pink-text">{{ result.missing|length }}</strong><small>Review manually</small></div></div>
+  <div class="two-column result-columns"><section class="content-panel"><div class="panel-heading"><div><div class="eyebrow">FOUND IN BOTH</div><h3>Matched skills <span class="count">{{ result.matched|length }}</span></h3></div></div><div class="skill-list">{% for skill in result.matched %}<span class="skill-pill good">✓ {{ skill }}</span>{% else %}<p class="muted">No listed skills matched. Try a fuller job description or check the resume text.</p>{% endfor %}</div>
+  <div class="subsection-title">Required skills detected</div><div class="skill-list">{% for skill in result.matched_required %}<span class="skill-pill good">{{ skill }}</span>{% else %}<span class="muted">None detected</span>{% endfor %}</div>
+  <div class="subsection-title">Preferred skills detected</div><div class="skill-list">{% for skill in result.matched_preferred %}<span class="skill-pill neutral">{{ skill }}</span>{% else %}<span class="muted">None detected</span>{% endfor %}</div>
+  </section><section class="content-panel"><div class="panel-heading"><div><div class="eyebrow">REVIEW THESE</div><h3>Skills not detected <span class="count">{{ result.missing|length }}</span></h3></div></div><div class="skill-list">{% for skill in result.missing %}<span class="skill-pill missing">+ {{ skill }}</span>{% else %}<p class="muted">No skills from our list were left unmatched.</p>{% endfor %}</div><p class="small-note">These are terms the analyzer didn't find. Review the original resume and job description before deciding whether anything needs to change.</p></section></div>
+  <section class="content-panel"><div class="panel-heading"><div><div class="eyebrow">PRACTICAL NEXT STEPS</div><h3>Resume improvement checklist</h3></div></div><ol class="suggestion-list">{% for item in result.suggestions %}<li>{{ item }}</li>{% endfor %}</ol></section>
+  <section class="prompt-panel"><div class="prompt-header"><div><div class="eyebrow">TAKE IT FURTHER</div><h2>Improve your resume with any AI assistant.</h2><p>Copy this personalized prompt and paste it into ChatGPT or another AI tool. Add your resume and job description when prompted.</p></div><button class="button primary" type="button" data-copy-target="improvement-prompt">Copy prompt ⧉</button></div><textarea id="improvement-prompt" class="prompt-text" readonly>{{ result.prompt }}</textarea><p class="small-note">Always verify the result. Never add skills or achievements you don't genuinely have.</p></section>
+</section>
+{% endif %}
+{% endblock %}

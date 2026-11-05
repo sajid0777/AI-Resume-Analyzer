@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#09050f">
+  <title>{% block title %}VioletCV — Resume Analyzer{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  <nav class="nav shell">
+    <a class="brand" href="{{ url_for('home') }}"><span class="brand-mark">V</span><span>Violet<span class="brand-light">CV</span></span></a>
+    <div class="nav-links">
+      <a href="{{ url_for('analyze') }}">Analyzer</a>
+      {% if current_user %}
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('history') }}">History</a>
+        <a href="{{ url_for('profile') }}">Profile</a>
+        <form action="{{ url_for('logout') }}" method="post" class="inline-form"><button class="nav-logout" type="submit">Log out</button></form>
+      {% else %}
+        <a href="{{ url_for('login') }}">Log in</a>
+        <a class="nav-cta" href="{{ url_for('register') }}">Create account <span>↗</span></a>
+      {% endif %}
+    </div>
+  </nav>
+  <main class="shell page">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}<div class="flash-stack">{% for category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="shell footer"><span>VioletCV</span><span>Thoughtful tools for your next opportunity.</span><span>Match estimate ≠ ATS score</span></footer>
+  <script>
+    document.querySelectorAll('[data-copy-target]').forEach(button => {
+      button.addEventListener('click', async () => {
+        const target = document.getElementById(button.dataset.copyTarget);
+        if (!target) return;
+        try {
+          await navigator.clipboard.writeText(target.value || target.innerText);
+          const old = button.innerText; button.innerText = 'Copied ✓';
+          setTimeout(() => button.innerText = old, 1600);
+        } catch (e) {
+          target.focus(); target.select(); document.execCommand('copy');
+          button.innerText = 'Copied ✓';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

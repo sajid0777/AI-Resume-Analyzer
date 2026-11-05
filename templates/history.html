@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Analysis History — VioletCV{% endblock %}
+{% block content %}
+<section class="page-title compact"><div><div class="eyebrow">YOUR WORKSPACE</div><h1>Analysis <span class="gradient-text">history.</span></h1><p>Only analyses saved under your account appear here.</p></div><a class="button primary" href="{{ url_for('analyze') }}">New analysis <span>↗</span></a></section>
+<section class="content-panel">
+{% if analyses %}<div class="history-list">{% for item in analyses %}<div class="history-row"><a class="history-icon" href="{{ url_for('analysis_detail', analysis_id=item.id) }}">▤</a><a class="history-main" href="{{ url_for('analysis_detail', analysis_id=item.id) }}"><strong>{{ item.title }}</strong><small>{{ item.created_at }}</small></a><span class="history-score">{{ item.score }}%</span><a class="row-arrow" href="{{ url_for('analysis_detail', analysis_id=item.id) }}">↗</a><form method="post" action="{{ url_for('delete_analysis', analysis_id=item.id) }}" onsubmit="return confirm('Delete this saved analysis?');"><button class="delete-button" type="submit" aria-label="Delete analysis">×</button></form></div>{% endfor %}</div>
+{% else %}<div class="empty-state"><div class="empty-symbol">▤</div><h3>No saved analyses yet</h3><p>Log in and run an analysis to keep the results here.</p><a class="button secondary" href="{{ url_for('analyze') }}">Analyze a resume</a></div>{% endif %}
+</section>
+{% endblock %}

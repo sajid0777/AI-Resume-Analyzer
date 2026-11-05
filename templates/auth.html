@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Create account' if mode == 'register' else 'Log in' }} — VioletCV{% endblock %}
+{% block content %}
+<section class="auth-layout">
+  <div class="auth-aside"><div class="eyebrow">YOUR CAREER WORKSPACE</div><h1>{% if mode == 'register' %}Build your next<br><span class="gradient-text">opportunity.</span>{% else %}Welcome<br><span class="gradient-text">back.</span>{% endif %}</h1><p>Keep your analysis history in one private workspace and make every application more intentional.</p><div class="auth-benefit"><span>✓</span> Your own analysis history</div><div class="auth-benefit"><span>✓</span> Editable profile details</div><div class="auth-benefit"><span>✓</span> Personalized improvement prompts</div></div>
+  <div class="auth-card"><div class="eyebrow">{{ 'GET STARTED' if mode == 'register' else 'GOOD TO SEE YOU' }}</div><h2>{{ 'Create your account' if mode == 'register' else 'Log in to VioletCV' }}</h2><p class="muted">{{ 'It only takes a minute.' if mode == 'register' else 'Continue where you left off.' }}</p>
+    <form method="post" class="form-stack">
+      {% if mode == 'register' %}<label>Full name<input name="full_name" autocomplete="name" maxlength="100" required placeholder="Your name"></label>{% endif %}
+      <label>Email address<input type="email" name="email" autocomplete="email" required placeholder="you@example.com"></label>
+      <label>Password<input type="password" name="password" autocomplete="{{ 'new-password' if mode == 'register' else 'current-password' }}" minlength="{{ 8 if mode == 'register' else 1 }}" required placeholder="{{ 'At least 8 characters' if mode == 'register' else 'Your password' }}"></label>
+      {% if mode == 'register' %}<label>Confirm password<input type="password" name="confirm_password" autocomplete="new-password" minlength="8" required placeholder="Repeat password"></label>{% endif %}
+      <button class="button primary full" type="submit">{{ 'Create account' if mode == 'register' else 'Log in' }} <span>↗</span></button>
+    </form>
+    <p class="auth-switch">{% if mode == 'register' %}Already have an account? <a href="{{ url_for('login') }}">Log in</a>{% else %}New here? <a href="{{ url_for('register') }}">Create a free account</a>{% endif %}</p>
+    <p class="fine-print">Use a unique password. Your password is stored as a secure hash, not plain text.</p>
+  </div>
+</section>
+{% endblock %}
